@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  app:
+    build: ./app
+    environment:
+      - FLASK_APP=item_catalog.py
