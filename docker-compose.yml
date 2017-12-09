@@ -5,3 +5,5 @@ services:
     build: ./app
     environment:
       - FLASK_APP=item_catalog.py
+    ports:
+      - "5000:5000"
