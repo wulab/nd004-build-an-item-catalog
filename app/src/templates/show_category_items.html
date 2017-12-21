@@ -8,4 +8,12 @@
       <figcaption class="item-title">{{ item.title }}</figcaption>
     </figure>
   {% endfor %}
+  {% if session.get('logged_in') %}
+    <figure class="item">
+      <a href="{{ url_for('new_item') }}">
+        <img src="{{ url_for('static', filename='new_item.png') }}" class="item-image">
+      </a>
+      <figcaption class="item-title">Add Item</figcaption>
+    </figure>
+  {% endif %}
 {% endblock %}

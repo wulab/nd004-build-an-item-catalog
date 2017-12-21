@@ -18,6 +18,14 @@
       <figcaption class="item-title">{{ item.title }}</figcaption>
     </figure>
   {% endfor %}
+  {% if session.get('logged_in') %}
+    <figure class="item">
+      <a href="{{ url_for('new_item') }}">
+        <img src="{{ url_for('static', filename='new_item.png') }}" class="item-image">
+      </a>
+      <figcaption class="item-title">Add Item</figcaption>
+    </figure>
+  {% endif %}
 {% endblock %}
 {% block details %}
   {% for detail in details %}
@@ -26,8 +34,12 @@
         <img src="{{ detail.image_url }}" class="detail-image">
       </figure>
       <h2 class="detail-title">{{ detail.title }}</h2>
-      <p class="detail-purchase-price">Purchase price: ${{ detail.purchase_price }}</p>
-      <p class="detail-note">{{ detail.note }}</p>
+      {% if detail.purchase_price %}
+        <p class="detail-purchase-price">Purchase price: ${{ detail.purchase_price }}</p>
+      {% endif %}
+      {% if detail.note %}
+        <p class="detail-note">{{ detail.note }}</p>
+      {% endif %}
     </article>
   {% endfor %}
 {% endblock %}

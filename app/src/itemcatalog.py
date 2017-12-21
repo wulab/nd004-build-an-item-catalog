@@ -52,7 +52,7 @@ def initdb_command():
 
 
 @app.route('/')
-@app.route('/items')
+@app.route('/items', methods=['GET'])
 def show_items():
     db = get_db()
     cur = db.execute('select * from categories order by id')
@@ -86,13 +86,35 @@ def show_category_items(category_id):
                            details=details)
 
 
-@app.route('/add', methods=['POST'])
-def add_item():
+@app.route('/items/new')
+def new_item():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into items (title, note) values (?, ?)',
-               [request.form['title'], request.form['note']])
+    cur = db.execute('select * from categories order by id')
+    categories = cur.fetchall()
+    cur = db.execute('select * from items order by id desc')
+    items = cur.fetchall()
+    return render_template('new_item.html',
+                           categories=categories,
+                           items=items)
+
+
+@app.route('/items', methods=['POST'])
+def create_item():
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('''\
+        insert into items (title, note, purchase_price, image_url, category_id)
+        values (?, ?, ?, ?, ?)
+        ''', [
+            request.form['title'] or 'Untitled',
+            request.form['note'],
+            request.form['purchase_price'],
+            request.form['image_url'] or 'http://via.placeholder.com/150x200',
+            request.form['category_id']
+        ])
     db.commit()
     flash('New item was successfully posted')
     return redirect(url_for('show_items'))

@@ -1,0 +1,33 @@
+{% extends "show_items.html" %}
+{% block details %}
+  <form action="{{ url_for('create_item') }}" method="POST" class="form-item">
+    <div class="field">
+      <label for="title">Title</label>
+      <input type="text" name="title" class="input">
+    </div>
+    <div class="field">
+      <label for="category_id">Category</label>
+      <select name="category_id" class="input">
+        {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="purchase_price">Purchase Price</label>
+      <input type="number" name="purchase_price" class="input">
+    </div>
+    <div class="field">
+      <label for="image_url">Image URL</label>
+      <input type="text" name="image_url" class="input">
+    </div>
+    <div class="field">
+      <label for="note">Note</label>
+      <textarea name="note" rows="5" class="input"></textarea>
+    </div>
+    <div class="field">
+      <button type="submit" class="button">Submit</button>
+      <a href="/" class="button">Cancel</a>
+    </div>
+  </form>
+{% endblock %}
