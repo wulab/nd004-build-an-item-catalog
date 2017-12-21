@@ -40,6 +40,13 @@
       {% if detail.note %}
         <p class="detail-note">{{ detail.note }}</p>
       {% endif %}
+      {% if session.get('logged_in') %}
+        <aside class="detail-actions">
+          <form action="{{ url_for('destroy_item', item_id=detail.id) }}" method="POST">
+            <button type="submit" class="button">Delete</button>
+          </form>
+        </aside>
+      {% endif %}
     </article>
   {% endfor %}
 {% endblock %}

@@ -120,6 +120,17 @@ def create_item():
     return redirect(url_for('show_items'))
 
 
+@app.route('/items/<item_id>/delete', methods=['POST'])
+def destroy_item(item_id):
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('delete from items where id = ?', item_id)
+    db.commit()
+    flash('Item was successfully deleted')
+    return redirect(url_for('show_items'))
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
