@@ -29,6 +29,10 @@ a {
 
 /* Form Inputs */
 
+.form-inline {
+    display: inline;
+}
+
 .field {
     margin-bottom: 0.75em;
 }
@@ -89,7 +93,7 @@ a {
 }
 
 .main-flex>* {
-    flex: 1 0 auto;
+    flex: 0 0 auto;
 }
 
 
@@ -118,6 +122,10 @@ a {
 .section-items {
     background-color: #f9f8f9;
     display: flex;
+}
+
+.section-details {
+    flex: 1 0 auto;
 }
 
 
@@ -222,7 +230,7 @@ a {
     }
 
     .main-flex>.section-categories {
-        flex: 1 1 128px;
+        flex: 1 0 128px;
     }
 
     .main-flex>.section-items {
