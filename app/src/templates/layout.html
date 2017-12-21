@@ -14,15 +14,15 @@
 
   <footer>
     {% block footer %}
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="notification">
-        {% for message in get_flashed_messages() %}
-          <p>{{ message }}</p>
-        {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="notification">
+          {% for message in get_flashed_messages() %}
+            <p>{{ message }}</p>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
     {% endblock %}
   </footer>
 </body>

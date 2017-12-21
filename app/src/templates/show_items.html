@@ -3,29 +3,31 @@
 {% block categories %}
   <ul>
     {% for category in categories %}
-    <li>
-      <a href="#">{{ category.name }}</a>
-    </li>
+      <li>
+        <a href="{{ url_for('show_category_items', category_id=category.id) }}">{{ category.name }}</a>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}
 {% block items %}
   {% for item in items %}
-  <figure class="item">
-    <a href="{{ url_for('show_items', selected=item.id) }}">
-      <img src="{{ item.image_url }}" class="item-image">
-    </a>
-    <figcaption class="item-title">{{ item.title }}</figcaption>
-  </figure>
+    <figure class="item">
+      <a href="{{ url_for('show_items', select=item.id) }}">
+        <img src="{{ item.image_url }}" class="item-image">
+      </a>
+      <figcaption class="item-title">{{ item.title }}</figcaption>
+    </figure>
   {% endfor %}
 {% endblock %}
 {% block details %}
-  <article class="detail">
-    <figure>
-      <img src="{{ item.image_url }}" class="detail-image">
-    </figure>
-    <h2 class="detail-title">{{ item.title }}</h2>
-    <p class="detail-purchase-price">Purchase price: ${{ item.purchase_price }}</p>
-    <p class="detail-note">{{ item.note }}</p>
-  </article>
+  {% for detail in details %}
+    <article class="detail">
+      <figure>
+        <img src="{{ detail.image_url }}" class="detail-image">
+      </figure>
+      <h2 class="detail-title">{{ detail.title }}</h2>
+      <p class="detail-purchase-price">Purchase price: ${{ detail.purchase_price }}</p>
+      <p class="detail-note">{{ detail.note }}</p>
+    </article>
+  {% endfor %}
 {% endblock %}

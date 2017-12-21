@@ -2,25 +2,24 @@
 {% block body %}
   <nav class="nav">
     {% block nav %}
-    <div class="nav-left">&nbsp;</div>
-    <div class="nav-brand">
-      <a href="/">ItemCatalog</a>
-    </div>
-    <div class="nav-right">
-      {% if not session.logged_in %}
-        <a href="{{ url_for('login') }}">Log In</a>
-      {% else %}
-        <a href="{{ url_for('logout') }}">Log Out</a>
-      {% endif %}
-    </div>
+      <div class="nav-left">&nbsp;</div>
+      <div class="nav-brand">
+        <a href="/">ItemCatalog</a>
+      </div>
+      <div class="nav-right">
+        {% if not session.logged_in %}
+          <a href="{{ url_for('login') }}">Log In</a>
+        {% else %}
+          <a href="{{ url_for('logout') }}">Log Out</a>
+        {% endif %}
+      </div>
     {% endblock %}
   </nav>
 
   <main class="main {% block mainclass %}{% endblock %}">
     {% block main %}
       <section class="section section-categories">
-        {% block categories %}
-        {% endblock %}
+        {% block categories %}{% endblock %}
       </section>
 
       <section class="section section-items">

@@ -55,20 +55,35 @@ def initdb_command():
 @app.route('/items')
 def show_items():
     db = get_db()
-    cur = db.execute('select * from items order by id desc')
-    items = cur.fetchall()
     cur = db.execute('select * from categories order by id')
     categories = cur.fetchall()
-    item = None
-    if 'selected' in request.args:
-        item_id = request.args['selected']
-        cur = db.execute('select * from items where id = ?', item_id)
-        item = cur.fetchone()
-
+    cur = db.execute('select * from items order by id desc')
+    items = cur.fetchall()
+    cur = db.execute('select * from items where id = ?',
+                     request.args.get('select', '0'))
+    details = cur.fetchall()
     return render_template('show_items.html',
                            categories=categories,
                            items=items,
-                           item=item)
+                           details=details)
+
+
+@app.route('/categories/<category_id>/items')
+def show_category_items(category_id):
+    db = get_db()
+    cur = db.execute('select * from categories order by id')
+    categories = cur.fetchall()
+    cur = db.execute('''\
+        select * from items where items.category_id = ? order by id desc
+        ''', category_id)
+    items = cur.fetchall()
+    cur = db.execute('select * from items where id = ?',
+                     request.args.get('select', '0'))
+    details = cur.fetchall()
+    return render_template('show_category_items.html',
+                           categories=categories,
+                           items=items,
+                           details=details)
 
 
 @app.route('/add', methods=['POST'])

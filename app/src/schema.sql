@@ -5,7 +5,7 @@ create table categories (
 );
 
 insert into categories (name)
-values ('Uncategoried'),
+values ('Uncategorized'),
        ('Books'),
        ('Movies'),
        ('Music'),
