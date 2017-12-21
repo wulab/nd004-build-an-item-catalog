@@ -52,11 +52,23 @@ def initdb_command():
 
 
 @app.route('/')
+@app.route('/items')
 def show_items():
     db = get_db()
-    cur = db.execute('select title, description from items order by id desc')
+    cur = db.execute('select * from items order by id desc')
     items = cur.fetchall()
-    return render_template('show_items.html', items=items)
+    cur = db.execute('select * from categories order by id')
+    categories = cur.fetchall()
+    item = None
+    if 'selected' in request.args:
+        item_id = request.args['selected']
+        cur = db.execute('select * from items where id = ?', item_id)
+        item = cur.fetchone()
+
+    return render_template('show_items.html',
+                           categories=categories,
+                           items=items,
+                           item=item)
 
 
 @app.route('/add', methods=['POST'])
@@ -64,8 +76,8 @@ def add_item():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into items (title, description) values (?, ?)',
-               [request.form['title'], request.form['description']])
+    db.execute('insert into items (title, note) values (?, ?)',
+               [request.form['title'], request.form['note']])
     db.commit()
     flash('New item was successfully posted')
     return redirect(url_for('show_items'))

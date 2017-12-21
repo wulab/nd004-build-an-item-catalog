@@ -12,6 +12,10 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+figure {
+    margin: 0;
+}
+
 label {
     display: block;
     margin-bottom: 0.5em;
@@ -76,6 +80,7 @@ a {
 
 .main {
     box-sizing: border-box;
+    height: calc(100vh - 44px);
 }
 
 .main-flex {
@@ -83,12 +88,16 @@ a {
     flex-direction: column;
 }
 
+.main-flex>* {
+    flex: 1 0 auto;
+}
+
 
 /* Sections */
 
 .section {
     padding: 20px;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 .section+.section {
@@ -142,14 +151,27 @@ a {
 /* Item List */
 
 .item {
-    margin: 0;
+    margin: 0 10px;
     text-align: center;
 }
 
-.item>.item-title {
+.item .item-title {
     display: none;
     height: 2em;
     margin: 10px 0;
+}
+
+.item .item-image {
+    max-height: 150px;
+    width: auto;
+}
+
+
+/* Item Details */
+
+.detail .detail-image {
+    height: auto;
+    max-width: 100%;
 }
 
 
@@ -214,6 +236,11 @@ a {
 
 
     /* Sections */
+
+    .section {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
     .section+.section {
         border-top: none;
