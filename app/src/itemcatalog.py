@@ -120,6 +120,45 @@ def create_item():
     return redirect(url_for('show_items'))
 
 
+@app.route('/items/<item_id>/edit')
+def edit_item(item_id):
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    cur = db.execute('select * from categories order by id')
+    categories = cur.fetchall()
+    cur = db.execute('select * from items order by id desc')
+    items = cur.fetchall()
+    cur = db.execute('select * from items where id = ?', item_id)
+    item = cur.fetchone()
+    return render_template('edit_item.html',
+                           categories=categories,
+                           items=items,
+                           item=item)
+
+
+@app.route('/items/<item_id>', methods=['POST'])
+def update_item(item_id):
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('''\
+        update items set
+        title = ?, note = ?, purchase_price = ?, image_url = ?, category_id = ?
+        where id = ?
+        ''', [
+            request.form['title'] or 'Untitled',
+            request.form['note'],
+            request.form['purchase_price'],
+            request.form['image_url'] or 'http://via.placeholder.com/150x200',
+            request.form['category_id'],
+            item_id
+        ])
+    db.commit()
+    flash('Item was successfully updated')
+    return redirect(url_for('show_items'))
+
+
 @app.route('/items/<item_id>/delete', methods=['POST'])
 def destroy_item(item_id):
     if not session.get('logged_in'):
