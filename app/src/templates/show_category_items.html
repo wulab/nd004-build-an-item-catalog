@@ -2,7 +2,7 @@
 {% block items %}
   {% for item in items %}
     <figure class="item">
-      <a href="{{ url_for('show_category_items', category_id=item.category_id, select=item.id) }}">
+      <a href="{{ url_for('show_category_items', category_id=item.category_id, selected=item.id) }}">
         <img src="{{ item.image_url }}" class="item-image">
       </a>
       <figcaption class="item-title">{{ item.title }}</figcaption>

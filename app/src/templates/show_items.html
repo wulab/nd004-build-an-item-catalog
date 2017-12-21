@@ -12,7 +12,7 @@
 {% block items %}
   {% for item in items %}
     <figure class="item">
-      <a href="{{ url_for('show_items', select=item.id) }}">
+      <a href="{{ url_for('show_items', selected=item.id) }}">
         <img src="{{ item.image_url }}" class="item-image">
       </a>
       <figcaption class="item-title">{{ item.title }}</figcaption>
@@ -28,26 +28,28 @@
   {% endif %}
 {% endblock %}
 {% block details %}
-  {% for detail in details %}
+  {% if item %}
     <article class="detail">
       <figure>
-        <img src="{{ detail.image_url }}" class="detail-image">
+        <img src="{{ item.image_url }}" class="detail-image">
       </figure>
-      <h2 class="detail-title">{{ detail.title }}</h2>
-      {% if detail.purchase_price %}
-        <p class="detail-purchase-price">Purchase price: ${{ detail.purchase_price }}</p>
+      <h2 class="detail-title">{{ item.title }}</h2>
+      {% if item.purchase_price %}
+        <p class="detail-purchase-price">Purchase price: ${{ item.purchase_price }}</p>
       {% endif %}
-      {% if detail.note %}
-        <p class="detail-note">{{ detail.note }}</p>
+      {% if item.note %}
+        <p class="detail-note">{{ item.note }}</p>
       {% endif %}
       {% if session.get('logged_in') %}
         <aside class="detail-actions">
-          <a href="{{ url_for('edit_item', item_id=detail.id) }}">Edit</a>
-          <form action="{{ url_for('destroy_item', item_id=detail.id) }}" method="POST">
+          <form action="{{ url_for('edit_item', item_id=item.id) }}" method="GET" class="form-inline">
+            <button type="submit" class="button">Edit</button>
+          </form>
+          <form action="{{ url_for('destroy_item', item_id=item.id) }}" method="POST" class="form-inline">
             <button type="submit" class="button">Delete</button>
           </form>
         </aside>
       {% endif %}
     </article>
-  {% endfor %}
+  {% endif %}
 {% endblock %}

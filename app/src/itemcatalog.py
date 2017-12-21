@@ -60,12 +60,12 @@ def show_items():
     cur = db.execute('select * from items order by id desc')
     items = cur.fetchall()
     cur = db.execute('select * from items where id = ?',
-                     request.args.get('select', '0'))
-    details = cur.fetchall()
+                     request.args.get('selected', '0'))
+    item = cur.fetchone()
     return render_template('show_items.html',
                            categories=categories,
                            items=items,
-                           details=details)
+                           item=item)
 
 
 @app.route('/categories/<category_id>/items')
@@ -78,12 +78,12 @@ def show_category_items(category_id):
         ''', category_id)
     items = cur.fetchall()
     cur = db.execute('select * from items where id = ?',
-                     request.args.get('select', '0'))
-    details = cur.fetchall()
+                     request.args.get('selected', '0'))
+    item = cur.fetchone()
     return render_template('show_category_items.html',
                            categories=categories,
                            items=items,
-                           details=details)
+                           item=item)
 
 
 @app.route('/items/new')
