@@ -1,6 +1,6 @@
 # Project: Build an Item Catalog
 
-![screenshot](https://user-images.githubusercontent.com/592709/33794751-95015aa8-dd04-11e7-94bf-7ebdc217c670.png)
+![screenshot](https://user-images.githubusercontent.com/592709/34283101-8016e5de-e6fc-11e7-9437-b03d67439d2f.png)
 
 > An application that provides a list of items
 
@@ -19,32 +19,35 @@ your system.
 
 Then, clone this repository:
 
-    $ git clone https://github.com/wulab/nd004-logs-analysis.git
+    $ git clone https://github.com/wulab/nd004-build-an-item-catalog.git
 
 ## Usage
 
-To run the reporting tool, issue the following command:
+To run the app, issue the following command:
 
-    $ cd nd004-movie-trailer-website
-    $ docker-compose run --rm app
+    $ cd nd004-build-an-item-catalog
+    $ docker-compose up
 
-The command will create a `db` service and seed it with initial data. Then, an
-`app` service that hosts the script to generate reports from that data will be
-created. Finally, you'll see 3 reports printed out on your console.
+The command will create an `app` service and start Flask built-in server on
+port 8000. You will need to seed its SQLite database with initial data:
 
-If you want to clean up after running the reporting tool, use:
+    $ docker-compose exec app flask initdb
+
+Then, point your browser at http://localhost:8000/ to start using the app. The
+default username and password is `admin` and `default` correspondingly.
+
+Press `Ctrl+C` to stop the service. If you want to clean up everything, use:
 
     $ docker-compose down --rmi local --volumes
 
 ## Contribute
 
 PRs not accepted. However, you can fork this repository and modify it under
-your account. To facilitate script development, there's a
-`docker-compose.development.yml` file you that can use. It will let you edit
-the `logs_analysis.py` file inside the container.
+your account. To facilitate app development, there's a
+`docker-compose.development.yml` file you that can use. It will mount your
+`app/src` directory to the one in the container which you can edit.
 
-    $ docker-compose -f docker-compose.yml -f docker-compose.development.yml run --rm app /bin/sh
-    /usr/src/app # python logs_analysis.py
+    $ docker-compose -f docker-compose.yml -f docker-compose.development.yml up
 
 ## License
 
