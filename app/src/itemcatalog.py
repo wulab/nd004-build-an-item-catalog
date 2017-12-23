@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, jsonify
 
 
 app = Flask(__name__)
@@ -51,25 +51,33 @@ def initdb_command():
     print('Initialized the database.')
 
 
-@app.route('/')
-@app.route('/items', methods=['GET'])
-def show_items():
+@app.route('/', defaults={'fmt': 'html'})
+@app.route('/items')
+@app.route('/items.<fmt>')
+def show_items(fmt):
     db = get_db()
     cur = db.execute('select * from categories order by id')
     categories = cur.fetchall()
     cur = db.execute('select * from items order by id desc')
     items = cur.fetchall()
-    cur = db.execute('select * from items where id = ?',
-                     request.args.get('selected', '0'))
+
+    if fmt == 'json':
+        return jsonify(categories=[dict(c) for c in categories],
+                       items=[dict(i) for i in items])
+
+    item_id = request.args.get('selected', '0')
+    cur = db.execute('select * from items where id = ?', item_id)
     item = cur.fetchone()
+
     return render_template('show_items.html',
                            categories=categories,
                            items=items,
                            item=item)
 
 
-@app.route('/categories/<category_id>/items')
-def show_category_items(category_id):
+@app.route('/categories/<category_id>/items', defaults={'fmt': 'html'})
+@app.route('/categories/<category_id>/items.<fmt>')
+def show_category_items(category_id, fmt):
     db = get_db()
     cur = db.execute('select * from categories order by id')
     categories = cur.fetchall()
@@ -77,9 +85,15 @@ def show_category_items(category_id):
         select * from items where items.category_id = ? order by id desc
         ''', category_id)
     items = cur.fetchall()
-    cur = db.execute('select * from items where id = ?',
-                     request.args.get('selected', '0'))
+
+    if fmt == 'json':
+        return jsonify(categories=[dict(c) for c in categories],
+                       items=[dict(i) for i in items])
+
+    item_id = request.args.get('selected', '0')
+    cur = db.execute('select * from items where id = ?', item_id)
     item = cur.fetchone()
+
     return render_template('show_category_items.html',
                            categories=categories,
                            items=items,
