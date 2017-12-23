@@ -33,8 +33,7 @@ port 8000. You will need to seed its SQLite database with initial data:
 
     $ docker-compose exec app flask initdb
 
-Then, point your browser at http://localhost:8000/ to start using the app. The
-default username and password is `admin` and `default` correspondingly.
+Then, point your browser at http://localhost:8000/ to start using the app.
 
 Press `Ctrl+C` to stop the service. If you want to clean up everything, use:
 

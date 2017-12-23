@@ -2,15 +2,16 @@ import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
+from urllib.parse import urlencode
 
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.update(
+    CLIENT_ID='123456789.apps.googleusercontent.com',
     DATABASE=os.path.join(app.root_path, 'itemcatalog.db'),
-    SECRET_KEY=b'6\x10m|\xa6iK\xf2Sv\r\xf9\x0e\x13\xfe\xcd',
-    USERNAME='admin',
-    PASSWORD='default'
+    SCOPE='https://www.googleapis.com/auth/userinfo.profile',
+    SECRET_KEY=b'6\x10m|\xa6iK\xf2Sv\r\xf9\x0e\x13\xfe\xcd'
 )
 
 
@@ -65,9 +66,11 @@ def show_items(fmt):
         return jsonify(categories=[dict(c) for c in categories],
                        items=[dict(i) for i in items])
 
-    item_id = request.args.get('selected', '0')
-    cur = db.execute('select * from items where id = ?', item_id)
-    item = cur.fetchone()
+    item = None
+    if 'selected' in request.args:
+        cur = db.execute('select * from items where id = ?',
+                         request.args['selected'])
+        item = cur.fetchone()
 
     return render_template('show_items.html',
                            categories=categories,
@@ -90,9 +93,11 @@ def show_category_items(category_id, fmt):
         return jsonify(categories=[dict(c) for c in categories],
                        items=[dict(i) for i in items])
 
-    item_id = request.args.get('selected', '0')
-    cur = db.execute('select * from items where id = ?', item_id)
-    item = cur.fetchone()
+    item = None
+    if 'selected' in request.args:
+        cur = db.execute('select * from items where id = ?',
+                         request.args['selected'])
+        item = cur.fetchone()
 
     return render_template('show_category_items.html',
                            categories=categories,
@@ -102,7 +107,7 @@ def show_category_items(category_id, fmt):
 
 @app.route('/items/new')
 def new_item():
-    if not session.get('logged_in'):
+    if 'logged_in' not in session:
         abort(401)
     db = get_db()
     cur = db.execute('select * from categories order by id')
@@ -116,7 +121,7 @@ def new_item():
 
 @app.route('/items', methods=['POST'])
 def create_item():
-    if not session.get('logged_in'):
+    if 'logged_in' not in session:
         abort(401)
     db = get_db()
     db.execute('''\
@@ -136,7 +141,7 @@ def create_item():
 
 @app.route('/items/<item_id>/edit')
 def edit_item(item_id):
-    if not session.get('logged_in'):
+    if 'logged_in' not in session:
         abort(401)
     db = get_db()
     cur = db.execute('select * from categories order by id')
@@ -153,7 +158,7 @@ def edit_item(item_id):
 
 @app.route('/items/<item_id>', methods=['POST'])
 def update_item(item_id):
-    if not session.get('logged_in'):
+    if 'logged_in' not in session:
         abort(401)
     db = get_db()
     db.execute('''\
@@ -175,7 +180,7 @@ def update_item(item_id):
 
 @app.route('/items/<item_id>/delete', methods=['POST'])
 def destroy_item(item_id):
-    if not session.get('logged_in'):
+    if 'logged_in' not in session:
         abort(401)
     db = get_db()
     db.execute('delete from items where id = ?', item_id)
@@ -184,19 +189,27 @@ def destroy_item(item_id):
     return redirect(url_for('show_items'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login')
 def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
-            session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('show_items'))
-    return render_template('login.html', error=error)
+    params = dict(
+        client_id=app.config['CLIENT_ID'],
+        redirect_uri=url_for('oauth2callback', _external=True),
+        scope=app.config['SCOPE'],
+        response_type='code'
+    )
+    authorization_url = 'https://accounts.google.com/o/oauth2/v2/auth?'
+    authorization_url += urlencode(params)
+    return redirect(authorization_url)
+
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    if 'code' in request.args:
+        session['logged_in'] = True
+        flash('You were logged in')
+    else:
+        flash(request.args.get('error', 'Access Denied'))
+    return redirect(url_for('show_items'))
 
 
 @app.route('/logout')
