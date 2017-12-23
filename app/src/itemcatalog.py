@@ -8,9 +8,8 @@ from urllib.parse import urlencode
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.update(
-    CLIENT_ID='123456789.apps.googleusercontent.com',
+    CLIENT_ID=os.getenv('OAUTH2_CLIENT_ID'),
     DATABASE=os.path.join(app.root_path, 'itemcatalog.db'),
-    SCOPE='https://www.googleapis.com/auth/userinfo.profile',
     SECRET_KEY=b'6\x10m|\xa6iK\xf2Sv\r\xf9\x0e\x13\xfe\xcd'
 )
 
@@ -194,7 +193,7 @@ def login():
     params = dict(
         client_id=app.config['CLIENT_ID'],
         redirect_uri=url_for('oauth2callback', _external=True),
-        scope=app.config['SCOPE'],
+        scope='profile',
         response_type='code'
     )
     authorization_url = 'https://accounts.google.com/o/oauth2/v2/auth?'

@@ -21,6 +21,10 @@ Then, clone this repository:
 
     $ git clone https://github.com/wulab/nd004-build-an-item-catalog.git
 
+You also need to have OAuth 2.0 client ID set in `docker-compose.yml` file.
+See [Setting up OAuth 2.0](https://support.google.com/googleapi/answer/6158849?hl=en&ref_topic=7013279)
+for instructions. The redirect URI should be `http://localhost:8000/oauth2callback`.
+
 ## Usage
 
 To run the app, issue the following command:
