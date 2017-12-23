@@ -107,7 +107,7 @@ def show_category_items(category_id, fmt):
 @app.route('/items/new')
 def new_item():
     if 'logged_in' not in session:
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     cur = db.execute('select * from categories order by id')
     categories = cur.fetchall()
@@ -121,7 +121,7 @@ def new_item():
 @app.route('/items', methods=['POST'])
 def create_item():
     if 'logged_in' not in session:
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     db.execute('''\
         insert into items (title, note, purchase_price, image_url, category_id)
@@ -141,7 +141,7 @@ def create_item():
 @app.route('/items/<item_id>/edit')
 def edit_item(item_id):
     if 'logged_in' not in session:
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     cur = db.execute('select * from categories order by id')
     categories = cur.fetchall()
@@ -158,7 +158,7 @@ def edit_item(item_id):
 @app.route('/items/<item_id>', methods=['POST'])
 def update_item(item_id):
     if 'logged_in' not in session:
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     db.execute('''\
         update items set
@@ -180,7 +180,7 @@ def update_item(item_id):
 @app.route('/items/<item_id>/delete', methods=['POST'])
 def destroy_item(item_id):
     if 'logged_in' not in session:
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     db.execute('delete from items where id = ?', item_id)
     db.commit()
@@ -203,12 +203,12 @@ def login():
 
 @app.route('/oauth2callback')
 def oauth2callback():
-    if 'code' in request.args:
+    if 'code' not in request.args:
+        return redirect(url_for('login'))
+    else:
         session['logged_in'] = True
         flash('You were logged in')
-    else:
-        flash(request.args.get('error', 'Access Denied'))
-    return redirect(url_for('show_items'))
+        return redirect(url_for('show_items'))
 
 
 @app.route('/logout')
