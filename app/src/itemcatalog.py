@@ -52,7 +52,7 @@ def initdb_command():
 
 
 @app.route('/', defaults={'fmt': 'html'})
-@app.route('/items')
+@app.route('/items', defaults={'fmt': 'html'})
 @app.route('/items.<fmt>')
 def show_items(fmt):
     db = get_db()

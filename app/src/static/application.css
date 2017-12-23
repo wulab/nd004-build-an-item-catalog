@@ -53,22 +53,14 @@ a {
     border-bottom: 1px solid #b8b6b8;
     color: #3a383a;
     display: flex;
-    padding: 10px;
+    padding: 10px 20px;
     height: 44px;
 }
 
 .nav-brand,
-.nav-left,
 .nav-right {
     flex: 1 1 0;
     line-height: 24px;
-}
-
-.nav-brand {
-    font-size: 24px;
-    font-style: italic;
-    font-weight: bold;
-    text-align: center;
 }
 
 .nav-brand a {
@@ -211,11 +203,6 @@ a {
     .nav {
         align-items: center;
         height: 5vh;
-        padding: 0 20px;
-    }
-
-    .nav-brand {
-        font-size: 32px;
     }
 
 
