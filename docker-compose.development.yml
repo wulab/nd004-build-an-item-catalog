@@ -4,5 +4,5 @@ services:
   app:
     environment:
       - FLASK_DEBUG=1
-    volumes:
-      - ./app/src:/usr/src/app
+    # volumes:
+    #   - ./app/src:/usr/src/app

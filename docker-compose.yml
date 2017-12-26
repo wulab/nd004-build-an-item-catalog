@@ -4,7 +4,7 @@ services:
   app:
     build: ./app
     environment:
-      - FLASK_APP=itemcatalog.py
+      - FLASK_APP=itemcatalog
       - OAUTH2_CLIENT_ID=123456789.apps.googleusercontent.com
     ports:
       - "8000:8000"
